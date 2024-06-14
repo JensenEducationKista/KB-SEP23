@@ -256,6 +256,7 @@ git status
 #         Group3/ali/
 
 # nothing added to commit but untracked files present (use "git add" to track)
+git checkout -b "ali_doc_verification"
 git add *
 git status
 # On branch main
