@@ -273,23 +273,5 @@ git commit -am "verify previous documentation"
 #   (use "git push" to publish your local commits)
 
 # nothing to commit, working tree clean
-git push --set-upstream origin $(git_current_branch)
-# git_current_branch: command not found
-Enter passphrase for key '/home/aliz/.ssh/hp.envy': "*********"
-# Enumerating objects: 7, done.
-# Counting objects: 100% (7/7), done.
-# Delta compression using up to 8 threads
-# Compressing objects: 100% (5/5), done.
-# Writing objects: 100% (5/5), 3.72 KiB | 3.72 MiB/s, done.
-# Total 5 (delta 1), reused 0 (delta 0), pack-reused 0
-# remote: Resolving deltas: 100% (1/1), completed with 1 local object.
-# To github.com:JensenEducationKista/KB-SEP23.git
-#    80f145a..bee069a  main -> main
-# Branch 'main' set up to track remote branch 'main' from 'origin'.
-
-git status
-# On branch main
-# Your branch is up to date with 'origin/main'.
-
-# nothing to commit, working tree clean
+git push --set-upstream origin ali_doc_verification
 
