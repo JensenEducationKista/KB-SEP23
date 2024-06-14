@@ -245,4 +245,50 @@ Enter passphrase for key '/home/aliz/.ssh/hp.envy': "******"
 cd KB-SEP23/Group3
 mkdir ali
 cd ali
+cd
+cd src/KB-SEP23/
+git status
+# On branch main
+# Your branch is up to date with 'origin/main'.
+
+# Untracked files:
+#   (use "git add <file>..." to include in what will be committed)
+#         Group3/ali/
+
+# nothing added to commit but untracked files present (use "git add" to track)
+git add *
+git status
+# On branch main
+# Your branch is up to date with 'origin/main'.
+
+# Changes to be committed:
+#   (use "git restore --staged <file>..." to unstage)
+#         new file:   Group3/ali/github.ssh.access.winx.2024.06.14.sh
+git config --global user.name "Ali Zabihi"
+git config --global user.email no@email.com
+git commit -am "verify previous documentation"
+# On branch main
+# Your branch is ahead of 'origin/main' by 1 commit.
+#   (use "git push" to publish your local commits)
+
+# nothing to commit, working tree clean
+git push --set-upstream origin $(git_current_branch)
+# git_current_branch: command not found
+Enter passphrase for key '/home/aliz/.ssh/hp.envy': "*********"
+# Enumerating objects: 7, done.
+# Counting objects: 100% (7/7), done.
+# Delta compression using up to 8 threads
+# Compressing objects: 100% (5/5), done.
+# Writing objects: 100% (5/5), 3.72 KiB | 3.72 MiB/s, done.
+# Total 5 (delta 1), reused 0 (delta 0), pack-reused 0
+# remote: Resolving deltas: 100% (1/1), completed with 1 local object.
+# To github.com:JensenEducationKista/KB-SEP23.git
+#    80f145a..bee069a  main -> main
+# Branch 'main' set up to track remote branch 'main' from 'origin'.
+
+git status
+# On branch main
+# Your branch is up to date with 'origin/main'.
+
+# nothing to commit, working tree clean
 
