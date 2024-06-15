@@ -264,10 +264,10 @@ git status
 # no changes added to commit (use "git add" and/or "git commit -a"
 git add .
 
-git commit -am "Add WSL setup documentation and initial git setup steps"
-# On branch main
-# Your branch is ahead of 'origin/main' by 1 commit.
-#   (use "git push" to publish your local commits)
+git commit -am "Add WSL setup documentation with initial git setup steps and the members of group"
+# [grupp4_dokumetation ee67301] Add WSL setup documentation with initial git setup steps and the members of group
+#  2 files changed, 282 insertions(+), 1 deletion(-)
+#  create mode 100644 Group4/github.ssh.access.winx.2024.06.14.sh
 
 # nothing to commit, working tree clean
 git push --set-upstream origin grupp4_dokumentation
