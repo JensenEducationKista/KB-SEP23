@@ -328,35 +328,65 @@ Enter passphrase for key '/home/nda/.ssh/asus.vivobook': "xaeha5seeh>aing^eeghui
 # Receiving objects: 100% (43/43), 17.80 KiB | 2.22 MiB/s, done.
 # Resolving deltas: 100% (15/15), done.
 
+
+# - create a branch from main branch
+git checkout -b "endah_doc_verification"
+
 # - Push changes to remote repository
 cd KB-SEP23/Group1
 mkdir endah
 cd endah
-cd
-cd src/KB-SEP23
-git status
-# On branch main
-# Your branch is up to date with 'origin/main'.
-# nothing to commit, working tree clean
+nano github.ssh.access.winx.2024.06.15.sh
+# - copy and paste all the text from original file to this nano editor
+Ctrl+x   # - to exit nano editor
+Ctrl+y   # - to save the file
 
+cd
+cd src/KB-SEP23/
+git status
+# On branch endah_doc_verification
+# Untracked files:
+#   (use "git add <file>..." to include in what will be committed)
+#         ./
 
 # nothing added to commit but untracked files present (use "git add" to track)
-git checkout -b "endah_doc_verification"
+
+
 git add *
 git status
-# On branch main
-# Your branch is up to date with 'origin/main'.
-
+# On branch endah_doc_verification
 # Changes to be committed:
 #   (use "git restore --staged <file>..." to unstage)
-#         new file:   Group3/ali/github.ssh.access.winx.2024.06.14.sh
-git config --global user.name "Ali Zabihi"
-git config --global user.email no@email.com
+#         new file:   Group1/endah/github.ssh.access.winx.2024.06.15.sh
+
+# - description for the commitment (any changes)
+git commit -m "add github.ssh.access.winx.2024.06.15.sh"
+# Author identity unknown
+
+# *** Please tell me who you are.
+
+# Run
+
+#   git config --global user.email "you@example.com"
+#   git config --global user.name "Your Name"
+
+# to set your account's default identity.
+# Omit --global to set the identity only in this repository.
+
+# fatal: empty ident name (for <nda@NDAVivo23.>) not allowed
+
+
+git config --global user.name "EndahAshalen"
+ git config --global user.email endahdamayanti.dd@gmail.com
 git commit -am "verify previous documentation"
+# [endah_doc_verification 33c8493] verify previous documentation
+#  1 file changed, 362 insertions(+)
+#  create mode 100644 Group1/endah/github.ssh.access.winx.2024.06.15.sh
+
+
 # On branch main
 # Your branch is ahead of 'origin/main' by 1 commit.
 #   (use "git push" to publish your local commits)
 
 # nothing to commit, working tree clean
-git push --set-upstream origin ali_doc_verification
-
+git push --set-upstream origin endah_doc_verification
