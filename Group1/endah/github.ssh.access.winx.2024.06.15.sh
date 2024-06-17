@@ -1,3 +1,4 @@
+
 #!/bin/sh
 echo This is a vodka-bottle-documentation, sorry, no automation at this time, :-/
 exit 1
@@ -390,3 +391,4 @@ git commit -am "verify previous documentation"
 
 # nothing to commit, working tree clean
 git push --set-upstream origin endah_doc_verification
+
