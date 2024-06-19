@@ -1,0 +1,424 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! Cisco
+! Physical Lab - RIP Routing
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1!!!!
+
+
+TODO:
+!
+!   LAN 1 Subnet: 192.168.1.10/24
+!       Network Address: 192.168.1.0/24
+!       Default Gateway 192.168.1.1
+!       
+!
+!   LAN 2 Subnet: 192.168.2.10/24
+!       Network Address: 192.168.1.0/24
+!       Default Gateway 192.168.2.1
+    
+    LAN 3 Subnet: 192.168.3.10/24
+!       Network Address: 192.168.1.0/24
+!       Default Gateway 192.168.3.1
+!       
+!       
+!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'pö
+'
+
+! Device          Interface           IP Address          Subnet Mask         Default Gateway
+! R1              Fa0/0                192.168.1.1        255.255.255.0           N/A
+!                 S0/0/0               10.10.10.1         255.255.255.252         N/A
+! R2              Fa0/0                192.168.2.1        255.255.255.0           N/A
+                  S0/0/0               10.10.10.2         255.255.255.252         N/A
+                  S0/0/1               10.10.10.5         255.255.255.252         N/A
+! R3              Ga0/0                10.10.10.2         255.255.255.252         N/A
+                  S0/0/1               10.10.10.2         255.255.255.252         N/A
+! PC1             NIC                  192.168.1.10       255.255.255.0         192.168.1.1
+! PC2             NIC                  192.168.2.10       255.255.255.0         192.168.2.1   
+  PC3             NIC                  192.168.3.10       255.255.255.0         192.168.3.1
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!
+Configuration on Putty
+!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! R1 Configuration
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+% Please answer 'yes' or 'no'.
+Would you like to enter the initial configuration dialog? [yes/no]: no
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!By default, the following "voice service voip"         !!
+!!sub-command is enabled:                                !!
+!!   ip address trusted authenticate                     !!
+!!                                                       !!
+!!The command enables the ip address authentication      !!
+!!on incoming H.323 or SIP trunk calls for toll fraud    !!
+!!prevention supports.                                   !!
+!!                                                       !!
+!!Please use "show ip address trusted list" command      !!
+!!to display a list of valid ip addresses for incoming   !!
+!!H.323 or SIP trunk calls.                              !!
+!!                                                       !!
+!!Additional valid ip addresses can be added via the     !!
+!!following command line:                                !!
+!!  voice service voip                                   !!
+!!   ip address trusted list                             !!
+!!    ipv4 <ipv4-address> [<ipv4 network-mask>]          !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+! Enter privileged EXEC mode
+enable
+
+! Enter global configuration mode
+conf ter
+
+! Set hostname to R1
+hostname R1
+
+! Disable DNS lookup
+no ip domain-lookup
+
+! Set banner message
+banner motd #ACCESS TO THIS ROUTER IS NOT ALLOWED!#
+
+! Configure Fa0/0 interface
+int fa0/0
+description connected to LAN1
+ip address 192.168.1.1 255.255.255.0
+no shutdown
+exit
+
+! Check wchich interface is assigned in the port because sommetimes interface is differ with addressing table!!!
+
+show ip int brief
+Interface                  IP-Address      OK? Method Status                Protocol
+FastEthernet0/0            192.168.1.1     YES manual up                    up
+FastEthernet0/1            unassigned      YES unset  administratively down down
+Serial0/1/0                unassigned      YES unset  administratively down down
+Serial0/1/1                unassigned      YES unset  administratively down down
+Serial0/2/0                unassigned      YES unset  administratively down down
+
+! Configure s0/1/0 interface
+int s0/1/0
+description connected to R2
+ip address 10.10.10.1 255.255.255.252
+no sutdown
+exit
+
+! enable RIP on R1
+router rip
+version 2
+no auto-summary
+passive-interface fa0/0
+network 192.168.1.0
+network  10.10.10.0
+do wr
+
+
+R1#show ip int brief
+Interface                  IP-Address      OK? Method Status                Protocol
+FastEthernet0/0            192.168.1.1     YES manual up                    up
+FastEthernet0/1            unassigned      YES unset  administratively down down
+Serial0/1/0                10.10.10.1      YES manual up                    up
+Serial0/1/1                unassigned      YES unset  administratively down down
+Serial0/2/0                unassigned      YES unset  administratively down down
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! R2 Configuration  
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+! Enter privileged EXEC mode
+enable
+
+! Enter global configuration mode
+conf ter
+
+! Set hostname to R2
+hostname R1
+
+! Disable DNS lookup
+no ip domain-lookup
+
+! Set banner message
+banner motd #ACCESS TO THIS ROUTER IS NOT ALLOWED!#
+
+! Configure Fa0/0 interface
+int fa0/0
+description connected to LAN2
+ip address 192.168.2.1 255.255.255.0
+no shutdown
+exit
+
+
+! Check wchich interface is assigned in the port because sommetimes interface is differ with addressing table!!!
+R2#show ip int brief
+Interface                  IP-Address      OK? Method Status                Protocol
+FastEthernet0/0            192.168.2.1     YES manual up                    up
+FastEthernet0/1            unassigned      YES unset  administratively down down
+Serial0/2/0                unassigned      YES unset  administratively down down
+Serial0/2/1                unassigned      YES unset  administratively down down
+R2#config ter
+
+! Configure S0//2/0 interface
+int s0/2/0
+description connected to R1
+ip address 10.10.10.2 255.255.255.252
+no shutdown
+exit
+
+! Configure S0//2/1 interface
+int s0/2/1
+description connected to R3
+ip address 10.10.10.5 255.255.255.252
+no shutdown
+exit
+
+! enable RIP on R2
+router rip
+version 2
+no auto-summary
+network 192.168.2.0
+network 10.10.10.0
+network 10.10.10.4
+do wr
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! R3 Configuration  
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+! Enter privileged EXEC mode
+enable
+
+! Enter global configuration mode
+conf ter
+
+! Set hostname to R3
+hostname R3
+
+! Disable DNS lookup
+no ip domain-lookup
+
+! Set banner message
+banner motd #ACCESS TO THIS ROUTER IS NOT ALLOWED!#
+
+! Configure G0/0 interface
+int G0/0
+description connected to LAN3
+ip address 192.168.3.1 255.255.255.0
+no shutdown
+exit
+
+! Configure S0/0/1 interface
+interface s0/0/1
+description connected to R2
+ip address 10.10.10.6 255.255.255.252
+no shutdown
+exit
+
+! enable RIP on R3
+router rip
+version 2
+no auto-summary
+network 172.16.3.0
+network 10.10.10.4
+passive-interface g0/0
+
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! Verification in the PCs
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+Ensure that Three PCs can ping each other without any problem
+ 
+ - From PC1:
+   ping 192.168.2.10
+   ping 192.168.3.10
+ 
+ - From PC2:
+  ping 192.168.1.10
+  ping 192.168.3.10
+
+  - From PC3:
+  ping 192.168.1.10
+  ping 192.168.2.10
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+PING from PC1 to PC2 and PC3 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+C:\Users\anont>ping 192.168.2.10
+
+Pinging 192.168.2.10 with 32 bytes of data:
+Request timed out.
+Request timed out.
+Reply from 192.168.1.10: Destination host unreachable.
+Reply from 192.168.1.10: Destination host unreachable.
+
+Ping statistics for 192.168.2.10:
+    Packets: Sent = 4, Received = 2, Lost = 2 (50% loss),
+
+C:\Users\anont>ping 192.168.3.10
+
+Pinging 192.168.2.10 with 32 bytes of data:
+Request timed out.
+Reply from 192.168.1.10: Destination host unreachable.
+
+"Note" when you see its saying destination unreachable its mean you configured well but firewall is not disable in the PCs
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+PING from PC2 to PC1 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+C:\Users\andle>ping 192.168.1.10
+
+Pinging 192.168.2.10 with 32 bytes of data:
+Reply from 169.254.60.67: Destination host unreachable.
+Reply from 169.254.60.67: Destination host unreachable.
+Reply from 169.254.60.67: Destination host unreachable.
+Reply from 169.254.60.67: Destination host unreachable.
+
+Ping statistics for 192.168.2.10:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+
+C:\Users\andle>
+
+"Note" when you see its saying destination unreachable its mean you configured well but firewall is not disable in the PCs
+
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+Point to connectvity Check from R1
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+R1#ping 192.168.2.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.2.1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 16/16/16 ms
+R1#ping 192.168.1.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.1.1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/4 ms
+R1#ping 192.168.3.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.3.1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 16/16/16 ms
+
+
+R1#ping 192.168.2.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.2.1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 16/16/16 ms
+R1#ping 192.168.1.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.1.1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/4 ms
+R1#ping 192.168.3.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.3.1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 16/16/16 ms
+R1#
+R1#ping 10.10.10.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.10.10.1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 28/30/32 ms
+R1#ping 10.10.10.2
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.10.10.2, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 12/14/16 ms
+R1#ping 10.10.10.5
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.10.10.5, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 16/16/16 ms
+R1#ping 10.10.10.6
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.10.10.6, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 16/16/16 ms
+R1#
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+Point to connectvity Check from R2
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+R2#ping 192.168.2.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.2.1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 16/16/16 ms
+R1#ping 192.168.1.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.1.1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/4 ms
+R1#ping 192.168.3.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.3.1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 16/16/16 ms
+
+
+R1#ping 192.168.2.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.2.1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 16/16/16 ms
+R1#ping 192.168.1.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.1.1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/4 ms
+R1#ping 192.168.3.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.3.1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 16/16/16 ms
+R1#
+R1#ping 10.10.10.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.10.10.1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 28/30/32 ms
+R1#ping 10.10.10.2
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.10.10.2, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 12/14/16 ms
+R1#ping 10.10.10.5
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.10.10.5, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 16/16/16 ms
+R1#ping 10.10.10.6
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.10.10.6, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 16/16/16 ms
+R1#
+
+
+
+
+
